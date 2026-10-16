@@ -26,11 +26,11 @@ import {
   Crown,
 } from 'lucide-react';
 import { ARCHETYPE_LIST } from '@/lib/progression/archetypes';
-import { useGame } from '@/lib/context/game-context';
 import HeroCharacter from '@/components/HeroCharacter';
 import { PageMascot, PageMascotType } from '@/components/PageMascot';
+import { AmbientBackground } from '@/components/ui/AmbientBackground';
 
-const PREVIEW_MODES = ['avatar', 'running', 'cycling', 'gaming', 'studying'] as const;
+const PREVIEW_MODES = ['avatar', 'hanging', 'running', 'cycling', 'gym', 'studying'] as const;
 type PreviewMode = (typeof PREVIEW_MODES)[number];
 
 const PREVIEW_CONFIG: Record<
@@ -52,6 +52,14 @@ const PREVIEW_CONFIG: Record<
     stat1: { name: 'Intellect', val: 'Lvl 18', color: '#7C3AED' },
     stat2: { name: 'Discipline', val: 'Lvl 15', color: '#38BDF8' },
   },
+  hanging: {
+    title: 'Mascot • HANGING',
+    tag: 'ASCEND Mascot',
+    xpLabel: 'MASCOT ENERGY',
+    xpValue: 'Always Ready',
+    stat1: { name: 'Social', val: 'Lvl 12', color: '#7C3AED' },
+    stat2: { name: 'Creativity', val: 'Lvl 10', color: '#C9A227' },
+  },
   running: {
     title: 'Mascot • RUNNING',
     tag: 'Daily Momentum',
@@ -68,12 +76,12 @@ const PREVIEW_CONFIG: Record<
     stat1: { name: 'Endurance', val: 'Lvl 19', color: '#38BDF8' },
     stat2: { name: 'Strength', val: 'Lvl 13', color: '#7C3AED' },
   },
-  gaming: {
-    title: 'Mascot • GAMING',
-    tag: 'RPG Mastery',
+  gym: {
+    title: 'Mascot • GYM',
+    tag: 'Fitness & Power',
     xpLabel: 'PERK UNLOCKS',
     xpValue: '5 Master Perks',
-    stat1: { name: 'Creativity', val: 'Lvl 20', color: '#C9A227' },
+    stat1: { name: 'Strength', val: 'Lvl 20', color: '#C9A227' },
     stat2: { name: 'Intellect', val: 'Lvl 17', color: '#7C3AED' },
   },
   studying: {
@@ -87,10 +95,8 @@ const PREVIEW_CONFIG: Record<
 };
 
 export default function LandingPage() {
-  const { loginAsDemoUser } = useGame();
   const [demoQuestCompleted, setDemoQuestCompleted] = useState(false);
   const [activeArchetypeTab, setActiveArchetypeTab] = useState(ARCHETYPE_LIST[0].id);
-<<<<<<< HEAD
   const [heroMascotMode, setHeroMascotMode] = useState<PreviewMode>('avatar');
   const [isAutoSwitching, setIsAutoSwitching] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -108,54 +114,41 @@ export default function LandingPage() {
 
     return () => clearInterval(timer);
   }, [isAutoSwitching, isHovered]);
-=======
-  const [heroMascotMode, setHeroMascotMode] = useState<'avatar' | PageMascotType>('avatar');
->>>>>>> origin/main
 
   const selectedArch = ARCHETYPE_LIST.find((a) => a.id === activeArchetypeTab) || ARCHETYPE_LIST[0];
   const currentPreview = PREVIEW_CONFIG[heroMascotMode];
 
   return (
-    <div className="space-y-24 py-8 pb-20 relative">
-      {/* 1. HERO SECTION (12-COL SPLIT GRID) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
-          {/* LEFT: HEADLINE, COPY & CTAS (7 COLS) */}
+    <div className="space-y-16 pb-20 relative">
+      {/* Dynamic Ambient Background Motion */}
+      <AmbientBackground variant="section" />
+
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-6 sm:pt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* LEFT: VALUE PROPOSITION (7 COLS) */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 bg-[#F2F2F7] border border-[#E5E5EA] rounded-full text-[#7C3AED] text-xs font-semibold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" />
-              <span>Turn your to-do list into a game</span>
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 bg-[#FAF9F5] border border-[#E5E5EA] rounded-full text-xs font-semibold text-[#1D1D1F] shadow-xs">
+              <Sparkles className="w-4 h-4 text-[#7C3AED]" />
+              <span>Real-Life RPG Habit & Task Gamification</span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#1D1D1F] leading-[1.05]">
-              Turn Your Daily Tasks <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] to-[#38BDF8]">
-                Into a Rewarding RPG
-              </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#1D1D1F] tracking-tight leading-[1.08]">
+              Upgrade your real life like an <span className="bg-gradient-to-r from-[#7C3AED] via-[#FF5E3A] to-[#C9A227] bg-clip-text text-transparent">RPG hero</span>.
             </h1>
 
             <p className="text-lg sm:text-xl text-[#6E6E73] max-w-2xl font-normal leading-relaxed">
               Turn your everyday tasks, workouts, study sessions, and habits into fun quests. Earn XP, level up your character, build streaks, and stay motivated every day.
             </p>
 
-            {/* Verb-led Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Verb-led Action Button */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-start gap-4">
               <Link
-                href="/onboarding"
-                className="px-8 py-4 btn-primary-gradient font-semibold text-base rounded-full flex items-center justify-center space-x-2 group cursor-pointer shadow-md hover:shadow-lg transition-all"
+                href="/auth/signup"
+                className="px-8 py-4 btn-primary-gradient font-semibold text-base rounded-full inline-flex items-center justify-center space-x-2 group cursor-pointer shadow-md hover:shadow-lg transition-all"
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <Link
-                href="/dashboard"
-                onClick={() => loginAsDemoUser('Cyber Mage')}
-                className="px-8 py-4 bg-white hover:bg-[#FAF9F5] text-[#1D1D1F] border border-[#E5E5EA] shadow-sm font-semibold text-base rounded-full transition-all flex items-center justify-center space-x-2 group cursor-pointer"
-              >
-                <Play className="w-4 h-4 text-[#7C3AED] fill-[#7C3AED]" />
-                <span>Try Instant Demo</span>
               </Link>
             </div>
 
@@ -178,20 +171,11 @@ export default function LandingPage() {
 
           {/* RIGHT: DEDICATED CHARACTER & MASCOT FRAME (5 COLS) */}
           <div className="lg:col-span-5 relative">
-<<<<<<< HEAD
             <div
               className="apple-card p-6 sm:p-8 relative overflow-hidden group shadow-md hover:shadow-xl transition-shadow"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-=======
-            <div className="apple-card p-6 sm:p-8 relative overflow-hidden group">
-              {/* Subtle Hanging Mascot on the Card Top Edge */}
-              <div className="absolute -top-3 right-6 z-20 hidden sm:block">
-                <PageMascot animationType="hanging" size={76} position="top-edge" />
-              </div>
-
->>>>>>> origin/main
               {/* Header with Mascot Activity Switcher */}
               <div className="flex flex-col gap-2.5 border-b border-[#E5E5EA] pb-3.5 mb-3">
                 <div className="flex items-center justify-between">
@@ -227,13 +211,8 @@ export default function LandingPage() {
                 </div>
 
                 {/* Mode Selector Tabs */}
-<<<<<<< HEAD
                 <div className="flex items-center space-x-1 overflow-x-auto py-1 scrollbar-none">
                   {PREVIEW_MODES.map((mode) => (
-=======
-                <div className="flex items-center space-x-1 overflow-x-auto py-1">
-                  {(['avatar', 'hanging', 'running', 'cycling', 'gym', 'studying'] as const).map((mode) => (
->>>>>>> origin/main
                     <button
                       key={mode}
                       onClick={() => {
@@ -253,7 +232,6 @@ export default function LandingPage() {
 
               {/* Illustration / Lottie Animation Canvas with Smooth Transitions */}
               <div className="relative h-72 sm:h-80 w-full flex items-center justify-center my-2">
-<<<<<<< HEAD
                 <AnimatePresence mode="wait">
                   {heroMascotMode === 'avatar' ? (
                     <motion.div
@@ -275,8 +253,8 @@ export default function LandingPage() {
                       transition={{ duration: 0.3 }}
                       className="flex flex-col items-center justify-center"
                     >
-                      <AnimatedMascot
-                        animationType={heroMascotMode}
+                      <PageMascot
+                        animationType={heroMascotMode as PageMascotType}
                         size={200}
                         showBadge={true}
                         badgeText={currentPreview.tag}
@@ -284,19 +262,6 @@ export default function LandingPage() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-=======
-                {heroMascotMode === 'avatar' ? (
-                  <HeroCharacter className="w-full h-full" />
-                ) : (
-                  <div className="flex flex-col items-center justify-center">
-                    <PageMascot
-                      animationType={heroMascotMode}
-                      size={200}
-                      showBadge={true}
-                    />
-                  </div>
-                )}
->>>>>>> origin/main
               </div>
 
               {/* Dynamic Telemetry Bar */}
@@ -568,8 +533,7 @@ export default function LandingPage() {
               </div>
 
               <Link
-                href="/onboarding"
-                onClick={() => loginAsDemoUser(selectedArch.id)}
+                href="/auth/signup"
                 className="inline-flex items-center space-x-2 px-6 py-3.5 btn-primary-gradient font-semibold text-xs rounded-full cursor-pointer"
               >
                 <span>Start as {selectedArch.name}</span>
@@ -599,6 +563,14 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 pb-2 border-t border-[#E5E5EA] flex flex-col sm:flex-row items-center justify-between text-xs text-[#8E8E93]">
+        <p>© {new Date().getFullYear()} ASCEND. All rights reserved.</p>
+        <div className="mt-4 sm:mt-0 space-x-6">
+          <Link href="/privacy" className="hover:text-[#1D1D1F] transition-colors">Privacy Policy</Link>
+        </div>
+      </footer>
     </div>
   );
 }

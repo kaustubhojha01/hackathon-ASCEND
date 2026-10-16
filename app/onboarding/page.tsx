@@ -5,7 +5,7 @@
 // Apple Bright Premium Onboarding with Interactive Avatars, Simple Language & Auto-Scroll
 // ==============================================================================
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -24,14 +24,34 @@ import {
 import { Logo } from '@/components/ui/Logo';
 import { ArchetypeAvatar } from '@/components/character/ArchetypeAvatar';
 import { PageMascot } from '@/components/PageMascot';
+import { createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 
 export default function OnboardingPage() {
   const router = useRouter();
   const { loginAsDemoUser, updateUserProfile } = useGame();
 
-  const [username, setUsername] = useState('Kaelen Vance');
+  const [username, setUsername] = useState('');
   const [selectedArchetype, setSelectedArchetype] = useState<Archetype>('Cyber Mage');
   const [isInitializing, setIsInitializing] = useState(false);
+
+  // Prepopulate username from authenticated user if available
+  useEffect(() => {
+    if (isSupabaseConfigured()) {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          const defaultName =
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            user.user_metadata?.username ||
+            user.email?.split('@')[0];
+          if (defaultName) {
+            setUsername(defaultName);
+          }
+        }
+      });
+    }
+  }, []);
 
   const archetypesRef = useRef<HTMLDivElement>(null);
   const initializeRef = useRef<HTMLDivElement>(null);
@@ -68,12 +88,45 @@ export default function OnboardingPage() {
 
     setIsInitializing(true);
     try {
+      if (isSupabaseConfigured()) {
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (user) {
+          await supabase.auth.updateUser({
+            data: {
+              username: username.trim(),
+              archetype: selectedArchetype,
+            },
+          });
+
+          // Using upsert instead of update to handle new users without DB triggers
+          await supabase
+            .from('profiles')
+            .upsert({
+              user_id: user.id,
+              username: username.trim(),
+              archetype: selectedArchetype,
+              avatar_url: ARCHETYPE_LIST.find(a => a.id === selectedArchetype)?.avatar || '/avatars/mage.png',
+              level: 1,
+              xp: 0,
+              gold: 150,
+              title: 'Novice Seeker'
+            }, { onConflict: 'user_id' });
+
+          await supabase.from('attributes').upsert({ user_id: user.id }, { onConflict: 'user_id' });
+          await supabase.from('streaks').upsert({ user_id: user.id }, { onConflict: 'user_id' });
+        }
+      }
+
       loginAsDemoUser(selectedArchetype);
       await updateUserProfile({
         username: username.trim(),
         archetype: selectedArchetype,
       });
-      router.push('/dashboard');
+      window.location.href = '/dashboard';
     } catch {
       setIsInitializing(false);
     }

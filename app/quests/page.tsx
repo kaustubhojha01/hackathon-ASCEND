@@ -10,15 +10,9 @@ import { useGame } from '@/lib/context/game-context';
 import { QuestCard } from '@/components/quests/QuestCard';
 import { CreateQuestModal } from '@/components/modals/CreateQuestModal';
 import { PageMascot } from '@/components/PageMascot';
-import {
-  Search,
-  Plus,
-  Swords,
-  Target,
-  Trophy,
-  Zap,
-} from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { isQuestCompletedOnDate, getTodayDateString } from '@/lib/progression/schedule';
+import { AmbientBackground } from '@/components/ui/AmbientBackground';
 
 export default function QuestsPage() {
   const { quests } = useGame();
@@ -41,7 +35,7 @@ export default function QuestsPage() {
         return (
           q.title.toLowerCase().includes(query) ||
           (q.description && q.description.toLowerCase().includes(query)) ||
-          q.attribute.toLowerCase().includes(query)
+          (q.attribute && q.attribute.toLowerCase().includes(query))
         );
       }
       return true;
@@ -171,9 +165,10 @@ export default function QuestsPage() {
       {/* 3. QUEST LIST */}
       <div className="space-y-3">
         {filteredQuests.length === 0 ? (
-          <div className="py-20 text-center text-[#6E6E73] apple-card bg-white">
-            <p className="font-semibold text-base text-[#1D1D1F]">No quests found</p>
-            <p className="text-xs mt-1 text-[#8E8E93]">Adjust your filters or create a new quest to get started.</p>
+          <div className="py-20 text-center text-[#6E6E73] apple-card bg-white relative overflow-hidden">
+            <AmbientBackground variant="card" />
+            <p className="font-semibold text-base text-[#1D1D1F] relative z-10">No quests found</p>
+            <p className="text-xs mt-1 text-[#8E8E93] relative z-10">Adjust your filters or create a new quest to get started.</p>
           </div>
         ) : (
           <div className="space-y-3">

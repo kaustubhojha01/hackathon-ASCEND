@@ -1,0 +1,212 @@
+/* ==============================================================================
+   ASCEND - HERO BACKGROUND ANIMATIONS
+   Premium futuristic RPG-inspired animated backdrop
+   Mobile-first (360–430px), fully responsive
+   ============================================================================== */
+
+/* ─── Container ─────────────────────────────────────────────────────────────── */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  /* Clamp to parent width — prevents horizontal overflow */
+  max-width: 100%;
+}
+
+/* ─── Gradient backdrop ─────────────────────────────────────────────────────── */
+.hero-bg__gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Top-left warm purple glow */
+    radial-gradient(ellipse 55% 45% at 8% 10%, rgba(192, 132, 252, 0.18) 0%, transparent 70%),
+    /* Top-right sky-blue glow */
+    radial-gradient(ellipse 50% 40% at 92% 6%, rgba(56, 189, 248, 0.14) 0%, transparent 70%),
+    /* Center-right pink accent */
+    radial-gradient(ellipse 35% 30% at 85% 45%, rgba(249, 168, 212, 0.10) 0%, transparent 70%),
+    /* Bottom soft purple wash */
+    radial-gradient(ellipse 60% 35% at 50% 95%, rgba(192, 132, 252, 0.08) 0%, transparent 70%),
+    /* Base cream */
+    linear-gradient(180deg, #FAF5FF 0%, #FAFAF8 30%, #FAFAF8 100%);
+}
+
+/* ─── Soft glow orbs ────────────────────────────────────────────────────────── */
+.hero-bg__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: orbDrift var(--hero-bg-play, running) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes orbDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(8px, -12px) scale(1.06); }
+  66%  { transform: translate(-6px, 8px) scale(0.95); }
+  100% { transform: translate(4px, -6px) scale(1.02); }
+}
+
+/* ─── Quest energy path ─────────────────────────────────────────────────────── */
+.hero-bg__quest-path {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+}
+
+.hero-bg__quest-stroke {
+  animation: questFlow 12s linear infinite var(--hero-bg-play, running);
+}
+
+.hero-bg__quest-stroke--secondary {
+  animation-duration: 18s;
+  animation-direction: reverse;
+}
+
+@keyframes questFlow {
+  0%   { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -200; }
+}
+
+.hero-bg__waypoints rect {
+  animation: waypointPulse 4s ease-in-out infinite var(--hero-bg-play, running);
+}
+
+.hero-bg__waypoints rect:nth-child(2) { animation-delay: 1s; }
+.hero-bg__waypoints rect:nth-child(3) { animation-delay: 2s; }
+.hero-bg__waypoints rect:nth-child(4) { animation-delay: 3s; }
+
+@keyframes waypointPulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* ─── Floating islands ──────────────────────────────────────────────────────── */
+.hero-bg__island {
+  position: absolute;
+  opacity: 0.5;
+  animation: islandFloat var(--hero-bg-play, running) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.hero-bg__island--tl {
+  top: 2%;
+  left: -2%;
+  width: 80px;
+  animation-duration: 14s;
+}
+
+.hero-bg__island--tr {
+  top: 1%;
+  right: -2%;
+  width: 70px;
+  animation-duration: 18s;
+  animation-delay: 2s;
+}
+
+.hero-bg__island--bl {
+  bottom: 22%;
+  left: -3%;
+  width: 60px;
+  animation-duration: 16s;
+  animation-delay: 4s;
+  opacity: 0.35;
+}
+
+@keyframes islandFloat {
+  0%   { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+/* ─── Glowing crystals ──────────────────────────────────────────────────────── */
+.hero-bg__crystal {
+  position: absolute;
+  animation: crystalFloat var(--hero-bg-play, running) ease-in-out infinite alternate;
+  will-change: transform;
+  transform: rotate(var(--crystal-rotate, 0deg));
+  filter: drop-shadow(0 0 4px hsla(var(--crystal-hue, 270), 60%, 70%, 0.3));
+}
+
+.hero-bg__crystal svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes crystalFloat {
+  0%   { transform: rotate(var(--crystal-rotate, 0deg)) translateY(0); opacity: 0.5; }
+  50%  { opacity: 0.8; }
+  100% { transform: rotate(var(--crystal-rotate, 0deg)) translateY(-8px); opacity: 0.6; }
+}
+
+/* ─── Floating particles ────────────────────────────────────────────────────── */
+.hero-bg__particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.7) 0%, rgba(192, 132, 252, 0.1) 70%);
+  animation: particleFloat var(--hero-bg-play, running) ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes particleFloat {
+  0%   { transform: translate(0, 0) scale(1); opacity: var(--particle-opacity, 0.3); }
+  25%  { transform: translate(calc(var(--particle-drift, 10px) * 0.5), -15px) scale(0.8); opacity: 0.15; }
+  50%  { transform: translate(var(--particle-drift, 10px), -30px) scale(1.1); opacity: var(--particle-opacity, 0.3); }
+  75%  { transform: translate(calc(var(--particle-drift, 10px) * 0.3), -15px) scale(0.9); opacity: 0.2; }
+  100% { transform: translate(0, 0) scale(1); opacity: var(--particle-opacity, 0.3); }
+}
+
+/* ─── Star sparkles (4-point) ───────────────────────────────────────────────── */
+.hero-bg__star {
+  position: absolute;
+  animation: starTwinkle 5s ease-in-out infinite var(--hero-bg-play, running);
+  will-change: transform, opacity;
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7) rotate(0deg); }
+  50%      { opacity: 0.6;  transform: scale(1.2) rotate(90deg); }
+}
+
+/* ─── Responsive adjustments ────────────────────────────────────────────────── */
+
+/* Mobile-first: elements are already sized for 360-430px */
+
+/* Tablets (640px+) — slightly bigger orbs and islands */
+@media (min-width: 640px) {
+  .hero-bg__island--tl { width: 100px; top: 1%; }
+  .hero-bg__island--tr { width: 90px; }
+  .hero-bg__island--bl { width: 75px; }
+  .hero-bg__orb { filter: blur(28px); }
+}
+
+/* Desktop (1024px+) — full expression */
+@media (min-width: 1024px) {
+  .hero-bg__island--tl { width: 130px; left: 0; }
+  .hero-bg__island--tr { width: 110px; right: 0; }
+  .hero-bg__island--bl { width: 95px; left: 0; bottom: 18%; }
+  .hero-bg__orb { filter: blur(35px); }
+  .hero-bg__gradient {
+    background:
+      radial-gradient(ellipse 40% 35% at 5% 8%, rgba(192, 132, 252, 0.20) 0%, transparent 70%),
+      radial-gradient(ellipse 35% 30% at 95% 5%, rgba(56, 189, 248, 0.16) 0%, transparent 70%),
+      radial-gradient(ellipse 25% 25% at 88% 42%, rgba(249, 168, 212, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 30% at 50% 95%, rgba(192, 132, 252, 0.10) 0%, transparent 70%),
+      linear-gradient(180deg, #FAF5FF 0%, #FAFAF8 25%, #FAFAF8 100%);
+  }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg__orb,
+  .hero-bg__crystal,
+  .hero-bg__particle,
+  .hero-bg__star,
+  .hero-bg__island,
+  .hero-bg__quest-stroke,
+  .hero-bg__waypoints rect {
+    animation: none !important;
+  }
+}

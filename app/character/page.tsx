@@ -13,6 +13,7 @@ import { ATTRIBUTE_LIST, calculateAttributeLevel, getAttributeMasteryTitle } fro
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 import { HabitTransformationCard } from '@/components/character/HabitTransformationCard';
 import { ArchetypeAvatar } from '@/components/character/ArchetypeAvatar';
+import { SwitchArchetypeModal } from '@/components/character/SwitchArchetypeModal';
 import { PageMascot } from '@/components/PageMascot';
 import {
   Sparkles,
@@ -23,6 +24,7 @@ import {
   Coins,
   Flame,
   Trophy,
+  Users,
 } from 'lucide-react';
 import { formatNumber } from '@/lib/utils';
 
@@ -31,6 +33,7 @@ export default function CharacterPage() {
   const progress = calculateLevelProgress(profile.xp);
   const archetypeInfo = ARCHETYPES[profile.archetype] || ARCHETYPES['Cyber Mage'];
 
+  const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
   const [previewFormulaLevel, setPreviewFormulaLevel] = useState(progress.currentLevel + 1);
 
   const rankMilestones = [
@@ -63,8 +66,17 @@ export default function CharacterPage() {
                 <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1D1D1F] tracking-tight">
                   {profile.username}
                 </h1>
-                <div className="text-xs font-mono tracking-wider text-purple-600 uppercase font-semibold mt-1 mb-4">
-                  {profile.title} • {profile.archetype}
+                <div className="flex items-center justify-center lg:justify-start gap-3 mt-1 mb-4 flex-wrap">
+                  <span className="text-xs font-mono tracking-wider text-purple-600 uppercase font-semibold">
+                    {profile.title} • {profile.archetype}
+                  </span>
+                  <button
+                    onClick={() => setIsSwitchModalOpen(true)}
+                    className="px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase bg-purple-50 text-[#7C3AED] border border-purple-200 hover:bg-purple-100 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <Users className="w-3.5 h-3.5" />
+                    <span>Switch Archetype</span>
+                  </button>
                 </div>
               </div>
               <PageMascot
@@ -252,7 +264,11 @@ export default function CharacterPage() {
           })}
         </div>
       </div>
+
+      <SwitchArchetypeModal
+        isOpen={isSwitchModalOpen}
+        onClose={() => setIsSwitchModalOpen(false)}
+      />
     </div>
   );
 }
-
